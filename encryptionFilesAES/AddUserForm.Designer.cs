@@ -1,4 +1,6 @@
-﻿namespace encryptionFilesAES
+﻿using System;
+
+namespace encryptionFilesAES
 {
     partial class AddUserForm
     {
@@ -70,12 +72,8 @@
             this.errorMessageLabel.AutoSize = true;
             this.errorMessageLabel.Location = new System.Drawing.Point(28, 173);
             this.errorMessageLabel.Name = "errorMessageLabel";
-            this.errorMessageLabel.Size = new System.Drawing.Size(74, 13);
+            this.errorMessageLabel.Size = new System.Drawing.Size(158, 13);
             this.errorMessageLabel.TabIndex = 3;
-            this.errorMessageLabel.Text = "Error message";
-            this.errorMessageLabel.Text = "Passwords need to be the same"; // to do usuniecia potem
-            this.errorMessageLabel.ForeColor = System.Drawing.Color.Red;
-            this.errorMessageLabel.Click += new System.EventHandler(this.Label4_Click);
             // 
             // usernameTB
             // 
@@ -108,12 +106,13 @@
             this.signUpButton.TabIndex = 7;
             this.signUpButton.Text = "Sign up";
             this.signUpButton.UseVisualStyleBackColor = true;
+            this.signUpButton.Click += new System.EventHandler(this.SignUp_Click);
             // 
             // AddUserForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(295, 199);
+            this.ClientSize = new System.Drawing.Size(451, 227);
             this.Controls.Add(this.signUpButton);
             this.Controls.Add(this.userRepeatPassTB);
             this.Controls.Add(this.userPassTB);
