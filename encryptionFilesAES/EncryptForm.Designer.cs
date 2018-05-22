@@ -89,6 +89,7 @@
             this.browseButton.TabIndex = 4;
             this.browseButton.Text = "Browse";
             this.browseButton.UseVisualStyleBackColor = true;
+            this.browseButton.Click += new System.EventHandler(this.Browse_Click);
             // 
             // outputFilenameTB
             // 
@@ -105,7 +106,6 @@
             this.outputFilenameLabel.Size = new System.Drawing.Size(81, 13);
             this.outputFilenameLabel.TabIndex = 6;
             this.outputFilenameLabel.Text = "Output filename";
-            this.outputFilenameLabel.Click += new System.EventHandler(this.outputFilenameLabel_Click);
             // 
             // encryptButton
             // 
@@ -115,6 +115,7 @@
             this.encryptButton.TabIndex = 7;
             this.encryptButton.Text = "Encrypt";
             this.encryptButton.UseVisualStyleBackColor = true;
+            this.encryptButton.Click += new System.EventHandler(this.Encrypt_Click);
             // 
             // encryptPB
             // 
@@ -137,9 +138,6 @@
             // approvedUsersLB
             // 
             this.approvedUsersLB.FormattingEnabled = true;
-            this.approvedUsersLB.Items.AddRange(new object[] {
-            "Konstanty",
-            "Kazan"});
             this.approvedUsersLB.Location = new System.Drawing.Point(343, 47);
             this.approvedUsersLB.Name = "approvedUsersLB";
             this.approvedUsersLB.Size = new System.Drawing.Size(120, 169);

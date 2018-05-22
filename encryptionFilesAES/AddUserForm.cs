@@ -21,13 +21,7 @@ namespace encryptionFilesAES
             this.errorMessageLabel.Hide();
         }
 
-        
-
-        private void AddUserForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
+       
         private void SignUp_Click(object sender, System.EventArgs e)
         {
             errorMessageLabel.Show();
@@ -50,17 +44,22 @@ namespace encryptionFilesAES
                 errorMessageLabel.Text = "Fields are not filled";
             }
 
-            string[] lines = File.ReadAllLines(@"..\..\users\publicKeys\data.txt");
-            foreach (var line in lines)
+
+            if (!dataAreWrong)
             {
-                if (!line.Equals(string.Empty))
+                string[] usernames = Directory.GetFiles(@"..\..\users\publicKeys", "*.txt")
+                                         .Select(Path.GetFileNameWithoutExtension)
+                                         .ToArray();
+                foreach (string username in usernames)
                 {
-                    var len = line.IndexOf("<");
-                    if (usernameTB.Text.Equals(line.Substring(0, len))) dataAreWrong = true;
-                    errorMessageLabel.Text = "There is a user with such name in the database";
+                    if (usernameTB.Text.Equals(username))
+                    {
+                        dataAreWrong = true;
+                        errorMessageLabel.Text = "There is a user with such name in the database";
+                        break;
+                    }
                 }
             }
-
 
             if (!dataAreWrong && (userPassTB.Text != userRepeatPassTB.Text))
             {
@@ -112,14 +111,14 @@ namespace encryptionFilesAES
             var publicKey = serviceRSA.KeyToString(serviceRSA.ParamsPubKey);
 
             using (StreamWriter file =
-                new StreamWriter(@"..\..\users\privateKeys\data.txt", true))
+                new StreamWriter(@"..\..\users\privateKeys\" + usernameTB.Text + ".txt", true))
             {
-                file.WriteLine(usernameTB.Text + "<*>" + encryptedPrivKey);
+                file.Write(encryptedPrivKey);
             }
             using (StreamWriter file =
-                new StreamWriter(@"..\..\users\publicKeys\data.txt", true))
+                new StreamWriter(@"..\..\users\publicKeys\" + usernameTB.Text + ".txt", true))
             {
-                file.WriteLine(usernameTB.Text + "<*>" + publicKey);
+                file.Write(publicKey);
             }
         }
 

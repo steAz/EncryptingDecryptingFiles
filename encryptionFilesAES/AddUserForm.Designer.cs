@@ -123,7 +123,6 @@ namespace encryptionFilesAES
             this.Controls.Add(this.usernameLabel);
             this.Name = "AddUserForm";
             this.Text = "Adding user";
-            this.Load += new System.EventHandler(this.AddUserForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

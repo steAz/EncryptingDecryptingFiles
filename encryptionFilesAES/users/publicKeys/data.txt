@@ -1,6 +1,0 @@
-
-kazan<*><?xml version="1.0" encoding="utf-16"?>
-<RSAParameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Exponent>AQAB</Exponent>
-  <Modulus>68yzkuV9OUmdDnOrBzkN1p1uRsSgM5AN57lBGQ17jrxXPSsa1W12bhHHsinTULwn0kwp5x1+10RDNFrlV36OCbdzYsRHeLHRRLwyM5MOWmKVxhfZ5+t3F/E2S0tzzLbMBJr9i5aL2DNMGTXardm+xNYgJSRHGZfNyGi14TctaCWJgj/ekC3hb5lqSxYik7TCG7Y8FX2AAN0haVPTEHDboM1WLxc4xMZvKoydSROzWpq8561077S03ARISsOTZuose+3Ikb19tBS21itkFSvvCm7gaZtbRkvG2lYCV4n6y1c0P17j8AI50HkdcbuTQKLxVgE4/gjaaRZtf2rt7oP29Q==</Modulus>
-</RSAParameters>
