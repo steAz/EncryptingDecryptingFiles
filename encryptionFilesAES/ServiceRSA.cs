@@ -24,17 +24,37 @@ namespace encryptionFilesAES
             ParamsPubKey = RSAcsp.ExportParameters(false);
         }
 
+        public ServiceRSA(string pubKey)
+        {
+            RSAcsp = new RSACryptoServiceProvider(2048);
+            ParamsPubKey = KeyToParamsKey(pubKey);
+        }
 
         /// <summary>
-        /// //converting the public key into a string representation
+        /// //converting the key into a string representation
         /// </summary>
-        /// <returns> string representation of PubKey </returns>
-        public string KeyToString(RSAParameters paramsKey)
+        /// <returns> string representation of Key </returns>
+        public string ParamsKeyToString(RSAParameters paramsKey)
         {
             var sw = new System.IO.StringWriter();
             var xs = new System.Xml.Serialization.XmlSerializer(typeof(RSAParameters));
             xs.Serialize(sw, paramsKey);
             return sw.ToString();
+        }
+
+        private RSAParameters KeyToParamsKey(string key)
+        {
+            var sr = new System.IO.StringReader(key);
+            var xs = new System.Xml.Serialization.XmlSerializer(typeof(RSAParameters));
+            return (RSAParameters)xs.Deserialize(sr);
+        }
+
+        public string EncryptSessionKey(string text)
+        {
+            RSAcsp.ImportParameters(ParamsPubKey); // the key which will be used to encryption is PubKey set earlier in constructor with an argument
+            var bytesText = Encoding.UTF8.GetBytes(text);
+            var bytesCypherText = RSAcsp.Encrypt(bytesText, false);
+            return Convert.ToBase64String(bytesCypherText);
         }
 
     }

@@ -107,8 +107,8 @@ namespace encryptionFilesAES
         {
             var serviceRSA = new ServiceRSA();
             var serviceAES = new ServiceAES(CipherMode.ECB, userPassTB.Text);
-            var encryptedPrivKey = serviceAES.Encrypt(serviceRSA.KeyToString(serviceRSA.ParamsPrivKey));
-            var publicKey = serviceRSA.KeyToString(serviceRSA.ParamsPubKey);
+            var encryptedPrivKey = serviceAES.Encrypt(serviceRSA.ParamsKeyToString(serviceRSA.ParamsPrivKey));
+            var publicKey = serviceRSA.ParamsKeyToString(serviceRSA.ParamsPubKey);
 
             using (StreamWriter file =
                 new StreamWriter(@"..\..\users\privateKeys\" + usernameTB.Text + ".txt", true))

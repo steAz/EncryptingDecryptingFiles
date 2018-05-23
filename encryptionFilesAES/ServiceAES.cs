@@ -24,7 +24,7 @@ namespace encryptionFilesAES
             AesCsp.Key = GetHashSha256(password);
         }
 
-    public string Encrypt(string text)
+        public string Encrypt(string text)
         {
             var transform = AesCsp.CreateEncryptor();
             var encryptedBytes = transform.TransformFinalBlock(ASCIIEncoding.ASCII.GetBytes(text),
