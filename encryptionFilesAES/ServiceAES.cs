@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.IO;
 
 namespace encryptionFilesAES
 {
@@ -16,7 +17,7 @@ namespace encryptionFilesAES
             AesCsp = new AesCryptoServiceProvider
             {
                 BlockSize = 128,
-                KeySize = 256,
+                KeySize = 192,
                 Mode = mode,
                 Padding = PaddingMode.PKCS7
             };
@@ -27,7 +28,7 @@ namespace encryptionFilesAES
         public string Encrypt(string text)
         {
             var transform = AesCsp.CreateEncryptor();
-            var encryptedBytes = transform.TransformFinalBlock(ASCIIEncoding.ASCII.GetBytes(text),
+            var encryptedBytes = transform.TransformFinalBlock(Encoding.UTF8.GetBytes(text),
                                                             0, text.Length);
             return Convert.ToBase64String(encryptedBytes);
         }
@@ -44,6 +45,29 @@ namespace encryptionFilesAES
             //}
 
             return hash;
+        }
+
+        public static byte[] GenerateRandomSalt()
+        {
+            byte[] data = new byte[32];
+
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    // Fille the buffer with the generated data
+                    rng.GetBytes(data);
+                }
+            }
+
+            return data;
+        }
+
+        public void EncryptFile(string inputFile)
+        {
+            byte[] salt = GenerateRandomSalt();
+            FileStream fsCrypt = new FileStream(inputFile + ".aes", FileMode.Create);
+
         }
     }
 }

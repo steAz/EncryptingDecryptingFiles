@@ -8,8 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 using System.Security.Cryptography;
+using System.Xml.Linq;
 
 namespace encryptionFilesAES
 {
@@ -57,8 +57,11 @@ namespace encryptionFilesAES
 
         private void Encrypt_Click(object sender, EventArgs e)
         {
-            List<User> users = new List<User>();
+            var users = new List<User>();
 
+            var keySize = 192;
+            var blockSize = 128;
+            var sessionKey = GetSessionKey(keySize/8); // length of key must be keySize/8
             foreach (var username in approvedUsersLB.CheckedItems)
             {
                 string pubKey;
@@ -67,83 +70,66 @@ namespace encryptionFilesAES
                     pubKey = sr.ReadToEnd();
                 }
                 var serviceRSA = new ServiceRSA(pubKey);
-                var sessionKey = GetSessionKey(245); // 245, because it's the maximum number of bytes that can be encrypted by asymetric RSA
                 var encryptedSessionKey = serviceRSA.EncryptSessionKey(sessionKey); // Encrypting session key of the user by public key of the same user
                 users.Add(new User(username.ToString(), encryptedSessionKey));
             }
 
-            CipherMode mode = CipherMode.ECB;
+
+            if (encryptionModeCB.SelectedItem == null)
+            {
+                MessageBox.Show("You must choose encryption mode");
+                return;
+            }
+
+            CipherMode mode = 0;
             var cipherMode = encryptionModeCB.SelectedItem.ToString();
             if (cipherMode == "ECB")
                 mode = CipherMode.ECB;
             else if (cipherMode == "CBC")
                 mode = CipherMode.CBC;
             else if (cipherMode == "OFB")
-                mode = CipherMode.OFB;
+            {
+                MessageBox.Show("OFB isnt supported in .NET");
+                return;
+            }
             else if (cipherMode == "CFB")
                 mode = CipherMode.CFB;
 
-            var serviceAES = new ServiceAES(mode, ".");
-
-            XmlDocument doc = new XmlDocument();
-
-            //(1) the xml declaration is recommended, but not mandatory
-            XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
-            XmlElement root = doc.DocumentElement;
-            doc.InsertBefore(xmlDeclaration, root);
-
-            //(2) string.Empty makes cleaner code
-            XmlElement element1 = doc.CreateElement(string.Empty, "EncryptedFileHeader", string.Empty);
-            doc.AppendChild(element1);
+            var headers = new XElement("EncryptedFileHeader");
+            headers.Add(new XElement("Algorithm", "AES"));
+            headers.Add(new XElement("KeySize", "196")); 
+            headers.Add(new XElement("BlockSize", "128"));
+            headers.Add(new XElement("CipherMode", cipherMode));
+            headers.Add(new XElement("IV", "XD"));
 
 
-            XmlElement element2 = doc.CreateElement(string.Empty, "Algorithm", string.Empty);
-            XmlText text1 = doc.CreateTextNode("AES");
-            element2.AppendChild(text1);
-            element1.AppendChild(element2);
-
-            element2 = doc.CreateElement(string.Empty, "KeySize", string.Empty);
-            text1 = doc.CreateTextNode(serviceAES.AesCsp.KeySize.ToString());
-            element2.AppendChild(text1);
-            element1.AppendChild(element2);
-
-            element2 = doc.CreateElement(string.Empty, "BlockSize", string.Empty);
-            text1 = doc.CreateTextNode(serviceAES.AesCsp.BlockSize.ToString());
-            element2.AppendChild(text1);
-            element1.AppendChild(element2);
-
-            element2 = doc.CreateElement(string.Empty, "CipherMode", string.Empty);
-            text1 = doc.CreateTextNode(cipherMode);
-            element2.AppendChild(text1);
-            element1.AppendChild(element2);
-
-            element2 = doc.CreateElement(string.Empty, "IV", string.Empty);
-            string IV = Encoding.Unicode.GetString(serviceAES.AesCsp.IV);
-            text1 = doc.CreateTextNode(IV);
-            element2.AppendChild(text1);
-            element1.AppendChild(element2);
-
-            element2 = doc.CreateElement(string.Empty, "ApprovedUsers", string.Empty);
-            foreach(var user in users)
+            var approvedUsers = new XElement("ApprovedUsers");
+            foreach (var user in users)
             {
-                var element3 = doc.CreateElement(string.Empty, "User", string.Empty);
-                element2.AppendChild(element3);
-                var element4 = doc.CreateElement(string.Empty, "Email", string.Empty);
-                text1 = doc.CreateTextNode(user.name);
-                element4.AppendChild(text1);
-                element3.AppendChild(element4);
-
-                element4 = doc.CreateElement(string.Empty, "SessionKey", string.Empty);
-                text1 = doc.CreateTextNode(user.encryptedSessionKey);
-                element4.AppendChild(text1);
-                element3.AppendChild(element4);
+                approvedUsers.Add(new XElement("User",
+                                    new XElement("Email", user.name),
+                                    new XElement("SessionKey", user.encryptedSessionKey)));
             }
-            element1.AppendChild(element2);
 
+            headers.Add(new XElement(approvedUsers));
+
+            var xmlFile = new XDocument(headers);
 
             var dirToSave = fileTB.Text.Substring(0, fileTB.Text.LastIndexOf("\\") + 1);
-            doc.Save(dirToSave + outputFilenameTB.Text);
+            var outputFileName = dirToSave + outputFilenameTB.Text;
+            xmlFile.Save(outputFileName);
 
+            using (var swEncrypt = File.AppendText(outputFileName))
+            {
+
+                //Write all data to the stream.
+                var sessionKeyInBytes = Encoding.ASCII.GetBytes(sessionKey);
+                    swEncrypt.Write(
+                        Convert.ToBase64String(
+                            ServiceRijndaelAES.EncryptStringToBytes(
+                                File.ReadAllText(
+                                    fileTB.Text), sessionKeyInBytes, mode, keySize, blockSize)));
+            }
         }
 
 

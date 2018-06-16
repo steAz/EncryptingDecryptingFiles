@@ -56,7 +56,7 @@
             this.encryptionModeCB.FormattingEnabled = true;
             this.encryptionModeCB.Items.AddRange(new object[] {
             "ECB",
-            "CCB",
+            "CBC",
             "CFB",
             "OFB"});
             this.encryptionModeCB.Location = new System.Drawing.Point(113, 10);
