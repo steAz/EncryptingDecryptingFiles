@@ -46,28 +46,5 @@ namespace encryptionFilesAES
 
             return hash;
         }
-
-        public static byte[] GenerateRandomSalt()
-        {
-            byte[] data = new byte[32];
-
-            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    // Fille the buffer with the generated data
-                    rng.GetBytes(data);
-                }
-            }
-
-            return data;
-        }
-
-        public void EncryptFile(string inputFile)
-        {
-            byte[] salt = GenerateRandomSalt();
-            FileStream fsCrypt = new FileStream(inputFile + ".aes", FileMode.Create);
-
-        }
     }
 }
