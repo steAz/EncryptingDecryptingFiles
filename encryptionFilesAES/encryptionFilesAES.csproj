@@ -80,6 +80,7 @@
     <Compile Include="ServiceAES.cs" />
     <Compile Include="ServiceRijndaelAES.cs" />
     <Compile Include="ServiceRSA.cs" />
+    <Compile Include="User.cs" />
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>

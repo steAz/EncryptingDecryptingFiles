@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Runtime.InteropServices;
 using System.IO;
+using encryptionFilesAES;
 
 namespace encryptionFilesAES
 {
     class ServiceRijndaelAES
     {
-        public static byte[] EncryptStringToBytes(string plainText, byte[] Key, CipherMode cipherMode, int keySize, int blockSize)
+        public static byte[] EncryptStringToBytes(EncryptForm ef, string plainText, byte[] Key, CipherMode cipherMode, byte[] IV)
         {
             if (plainText == null || plainText.Length <= 0)
                 throw new ArgumentNullException("plainText");
@@ -25,12 +26,11 @@ namespace encryptionFilesAES
 
                 rijAlg.Key = Key;
                 rijAlg.Mode = cipherMode;
-                rijAlg.Padding = PaddingMode.PKCS7;
-                rijAlg.GenerateIV();
+                rijAlg.IV = IV;
 
                 // Create a decryptor to perform the stream transform.
                 var encryptor = rijAlg.CreateEncryptor(rijAlg.Key, rijAlg.IV);
-
+                int i = 0;
                 // Create the streams used for encryption. 
                 using (MemoryStream msEncrypt = new MemoryStream())
                 {
@@ -38,8 +38,6 @@ namespace encryptionFilesAES
                     {
                         using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
                         {
-
-                            //Write all data to the stream.
                             swEncrypt.Write(plainText);
                         }
                         encrypted = msEncrypt.ToArray();
@@ -85,14 +83,16 @@ namespace encryptionFilesAES
 
                             // Read the decrypted bytes from the decrypting stream 
                             // and place them in a string.rijndael.Padding = PaddingMode.None;
-
+                            
                             plaintext = srDecrypt.ReadToEnd();
                         }
                     }
                 }
 
             }
-            return plaintext;
+            byte[] bytes = Encoding.Default.GetBytes(plaintext);
+            return Encoding.UTF8.GetString(bytes);
+           // return plaintext;
         }
     }
 }

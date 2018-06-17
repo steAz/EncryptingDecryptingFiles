@@ -106,7 +106,8 @@ namespace encryptionFilesAES
         private void AddUser()
         {
             var serviceRSA = new ServiceRSA();
-            var serviceAES = new ServiceAES(CipherMode.ECB, userPassTB.Text);
+            var serviceAES = new ServiceAES(CipherMode.ECB, userPassTB.Text, false);
+            var IV = serviceAES.GetIV();
             var encryptedPrivKey = serviceAES.Encrypt(serviceRSA.ParamsKeyToString(serviceRSA.ParamsPrivKey));
             var publicKey = serviceRSA.ParamsKeyToString(serviceRSA.ParamsPubKey);
 
@@ -119,6 +120,11 @@ namespace encryptionFilesAES
                 new StreamWriter(@"..\..\users\publicKeys\" + usernameTB.Text + ".txt", true))
             {
                 file.Write(publicKey);
+            }
+            using (StreamWriter file =
+                new StreamWriter(@"..\..\users\vectorsIV\" + usernameTB.Text + ".txt", true))
+            {
+                file.Write(IV);
             }
         }
 

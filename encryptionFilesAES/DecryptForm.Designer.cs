@@ -31,7 +31,7 @@
             this.approvedUsersLabel = new System.Windows.Forms.Label();
             this.approvedUsersCB = new System.Windows.Forms.ComboBox();
             this.browseButton = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.fileTB = new System.Windows.Forms.TextBox();
             this.fileLabel = new System.Windows.Forms.Label();
             this.outputFilenameLabel = new System.Windows.Forms.Label();
             this.outputFilenameTB = new System.Windows.Forms.TextBox();
@@ -39,7 +39,7 @@
             this.decryptMessageLabel = new System.Windows.Forms.Label();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.passwordLabel = new System.Windows.Forms.Label();
-            this.passwordTB = new System.Windows.Forms.TextBox();
+            this.userPassTB = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // approvedUsersLabel
@@ -55,9 +55,6 @@
             // 
             this.approvedUsersCB.Cursor = System.Windows.Forms.Cursors.Default;
             this.approvedUsersCB.FormattingEnabled = true;
-            this.approvedUsersCB.Items.AddRange(new object[] {
-            "Konstanty",
-            "Oskar"});
             this.approvedUsersCB.Location = new System.Drawing.Point(256, 80);
             this.approvedUsersCB.Name = "approvedUsersCB";
             this.approvedUsersCB.Size = new System.Drawing.Size(121, 21);
@@ -71,13 +68,14 @@
             this.browseButton.TabIndex = 2;
             this.browseButton.Text = "Browse";
             this.browseButton.UseVisualStyleBackColor = true;
+            this.browseButton.Click += new System.EventHandler(this.Browse_Click);
             // 
-            // textBox1
+            // fileTB
             // 
-            this.textBox1.Location = new System.Drawing.Point(41, 9);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(289, 20);
-            this.textBox1.TabIndex = 3;
+            this.fileTB.Location = new System.Drawing.Point(41, 9);
+            this.fileTB.Name = "fileTB";
+            this.fileTB.Size = new System.Drawing.Size(289, 20);
+            this.fileTB.TabIndex = 3;
             // 
             // fileLabel
             // 
@@ -112,6 +110,7 @@
             this.decryptButton.TabIndex = 7;
             this.decryptButton.Text = "Decrypt";
             this.decryptButton.UseVisualStyleBackColor = true;
+            this.decryptButton.Click += new System.EventHandler(this.Decrypt_Click);
             // 
             // decryptMessageLabel
             // 
@@ -139,20 +138,20 @@
             this.passwordLabel.TabIndex = 10;
             this.passwordLabel.Text = "Password (chosen user)";
             // 
-            // passwordTB
+            // userPassTB
             // 
-            this.passwordTB.Location = new System.Drawing.Point(138, 116);
-            this.passwordTB.Name = "passwordTB";
-            this.passwordTB.PasswordChar = '*';
-            this.passwordTB.Size = new System.Drawing.Size(100, 20);
-            this.passwordTB.TabIndex = 11;
+            this.userPassTB.Location = new System.Drawing.Point(138, 116);
+            this.userPassTB.Name = "userPassTB";
+            this.userPassTB.PasswordChar = '*';
+            this.userPassTB.Size = new System.Drawing.Size(100, 20);
+            this.userPassTB.TabIndex = 11;
             // 
             // DecryptForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(403, 245);
-            this.Controls.Add(this.passwordTB);
+            this.Controls.Add(this.userPassTB);
             this.Controls.Add(this.passwordLabel);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.decryptMessageLabel);
@@ -160,7 +159,7 @@
             this.Controls.Add(this.outputFilenameTB);
             this.Controls.Add(this.outputFilenameLabel);
             this.Controls.Add(this.fileLabel);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.fileTB);
             this.Controls.Add(this.browseButton);
             this.Controls.Add(this.approvedUsersCB);
             this.Controls.Add(this.approvedUsersLabel);
@@ -176,7 +175,7 @@
         private System.Windows.Forms.Label approvedUsersLabel;
         private System.Windows.Forms.ComboBox approvedUsersCB;
         private System.Windows.Forms.Button browseButton;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox fileTB;
         private System.Windows.Forms.Label fileLabel;
         private System.Windows.Forms.Label outputFilenameLabel;
         private System.Windows.Forms.TextBox outputFilenameTB;
@@ -184,6 +183,6 @@
         private System.Windows.Forms.Label decryptMessageLabel;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.Label passwordLabel;
-        private System.Windows.Forms.TextBox passwordTB;
+        private System.Windows.Forms.TextBox userPassTB;
     }
 }

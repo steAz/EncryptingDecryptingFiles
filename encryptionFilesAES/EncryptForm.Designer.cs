@@ -133,7 +133,6 @@
             this.encryptMessageLabel.Name = "encryptMessageLabel";
             this.encryptMessageLabel.Size = new System.Drawing.Size(111, 13);
             this.encryptMessageLabel.TabIndex = 9;
-            this.encryptMessageLabel.Text = "Encryption in progress";
             // 
             // approvedUsersLB
             // 

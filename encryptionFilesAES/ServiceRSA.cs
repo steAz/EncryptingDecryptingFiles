@@ -30,6 +30,12 @@ namespace encryptionFilesAES
             ParamsPubKey = KeyToParamsKey(pubKey);
         }
 
+        public ServiceRSA(string privKey, bool forNothing)
+        {
+            RSAcsp = new RSACryptoServiceProvider(2048);
+            ParamsPrivKey = KeyToParamsKey(privKey);
+        }
+
         /// <summary>
         /// //converting the key into a string representation
         /// </summary>
@@ -55,6 +61,14 @@ namespace encryptionFilesAES
             var bytesText = Encoding.UTF8.GetBytes(text);
             var bytesCypherText = RSAcsp.Encrypt(bytesText, false);
             return Convert.ToBase64String(bytesCypherText);
+        }
+
+        public string DecryptSessionKey(string cypherText)
+        {
+            RSAcsp.ImportParameters(ParamsPrivKey); // the key which will be used to decryption is PrivKey set earlier in constructor with an argument
+            var bytesCypherText = Convert.FromBase64String(cypherText);
+            var bytesText = RSAcsp.Decrypt(bytesCypherText, false);
+            return Convert.ToBase64String(bytesText);
         }
 
     }
