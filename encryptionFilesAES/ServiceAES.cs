@@ -42,11 +42,8 @@ namespace encryptionFilesAES
         public string Encrypt(string text)
         {
             var encryptor = AesCsp.CreateEncryptor();
-            byte[] encrypted;
-            //var encryptedBytes = transform.TransformFinalBlock(Convert.FromBase64String(text),
-            //                                                0, text.Length);
-            //return Convert.ToBase64String(encryptedBytes);
 
+            byte[] encrypted;
             using (MemoryStream msEncrypt = new MemoryStream())
             {
                 using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
@@ -68,11 +65,8 @@ namespace encryptionFilesAES
         {
             AesCsp.IV = IV;
             var decryptor = AesCsp.CreateDecryptor();
-            //var decryptedBytes = ct.TransformFinalBlock(Convert.FromBase64String(encryptedText),
-            // 0, encryptedText.Length);
-            // return Convert.ToBase64String(decryptedBytes);
-            string text = null;
 
+            string text = null;
             using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(encryptedText)))
             {
                 using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
@@ -96,12 +90,6 @@ namespace encryptionFilesAES
             var bytes = Encoding.UTF8.GetBytes(text);
             var hashstring = new SHA256Managed();
             var hash = hashstring.ComputeHash(bytes);
-            //var hashString = string.Empty;
-            //foreach (var element in hash)
-            //{
-            //    hashString += String.Format("{0:X2}", element);
-            //}
-
             return hash;
         }
 

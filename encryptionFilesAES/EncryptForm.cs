@@ -17,6 +17,7 @@ namespace encryptionFilesAES
     {
         private BackgroundWorker backgroundWorker1;
 
+
         public EncryptForm()
         {
             InitializeComponent();
@@ -32,6 +33,7 @@ namespace encryptionFilesAES
             InitializeBackgroundWorker();
         }
 
+
         private void InitializeBackgroundWorker()
         {
             backgroundWorker1.DoWork +=
@@ -42,10 +44,12 @@ namespace encryptionFilesAES
               new ProgressChangedEventHandler(BackgroundWorker1_ProgressChanged);
         }
 
+
         private void BackgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             encryptPB.Value = e.ProgressPercentage;
         }
+
 
         private void BackgroundWorker1_DoWork(object sender,
            DoWorkEventArgs e)
@@ -69,11 +73,13 @@ namespace encryptionFilesAES
             }
         }
 
+
         private void BackgroundWorker1_RunWorkerCompleted(
             object sender, RunWorkerCompletedEventArgs e)
         {
             encryptPB.Value = 100;
         }
+
 
         public string GetSessionKey(int size)
         {
@@ -94,13 +100,7 @@ namespace encryptionFilesAES
 
         private void Encrypt_Click(object sender, EventArgs e)
         {
-            encryptMessageLabel.Show();
-            encryptPB.Show();
-            if (backgroundWorker1.IsBusy != true)
-            {
-                // Start the asynchronous operation.
-                backgroundWorker1.RunWorkerAsync();
-            }
+            encryptMessageLabel.Show();  
             this.encryptMessageLabel.ForeColor = Color.Orange;
             this.encryptMessageLabel.Text = "Encryption in progress";
 
@@ -108,34 +108,34 @@ namespace encryptionFilesAES
             {
                 this.encryptMessageLabel.ForeColor = Color.Red;
                 this.encryptMessageLabel.Text = "Encryption failed";
+                encryptPB.Hide();
                 MessageBox.Show("No encryption mode was chosen");
                 return;
             }
-
             if (outputFilenameTB.Text.Equals(string.Empty))
             {
                 this.encryptMessageLabel.ForeColor = Color.Red;
                 this.encryptMessageLabel.Text = "Encryption failed";
+                encryptPB.Hide();
                 MessageBox.Show("No output filename was chosen");
                 return;
             }
-
             if (fileTB.Text.Equals(string.Empty))
             {
                 this.encryptMessageLabel.ForeColor = Color.Red;
                 this.encryptMessageLabel.Text = "Encryption failed";
+                encryptPB.Hide();
                 MessageBox.Show("No input file was chosen");
                 return;
             }
-
             if (approvedUsersLB.CheckedItems.Count <= 0)
             {
                 this.encryptMessageLabel.ForeColor = Color.Red;
                 this.encryptMessageLabel.Text = "Encryption failed";
+                encryptPB.Hide();
                 MessageBox.Show("No receiver/receivers was/were chosen");
                 return;
             }
-
 
             var users = new List<User>();
 
@@ -164,10 +164,7 @@ namespace encryptionFilesAES
                 var encryptedSessionKey = serviceRSA.EncryptSessionKey(sessionKey); // Encrypting session key of the user by public key of the same user
                 users.Add(new User(username.ToString(), encryptedSessionKey));
             }
-
-
-            
-
+    
             CipherMode mode = 0;
             var cipherMode = encryptionModeCB.SelectedItem.ToString();
             if (cipherMode == "ECB")
@@ -176,7 +173,10 @@ namespace encryptionFilesAES
                 mode = CipherMode.CBC;
             else if (cipherMode == "OFB")
             {
+                this.encryptMessageLabel.ForeColor = Color.Red;
+                this.encryptMessageLabel.Text = "Encryption failed";
                 MessageBox.Show("OFB isnt supported in .NET");
+                encryptPB.Hide();
                 return;
             }
             else if (cipherMode == "CFB")
@@ -190,8 +190,6 @@ namespace encryptionFilesAES
             headers.Add(new XElement("IV", Convert.ToBase64String(fileIV)));
             var extensionOfFile = Path.GetExtension(fileTB.Text);
             headers.Add(new XElement("Extension", extensionOfFile));
-
-
             var approvedUsers = new XElement("ApprovedUsers");
             foreach (var user in users)
             {
@@ -199,14 +197,19 @@ namespace encryptionFilesAES
                                     new XElement("Email", user.name),
                                     new XElement("SessionKey", user.encryptedSessionKey)));
             }
-
             headers.Add(new XElement(approvedUsers));
-
             var xmlFile = new XDocument(headers);
 
             var dirToSave = fileTB.Text.Substring(0, fileTB.Text.LastIndexOf("\\") + 1);
             var outputFileName = dirToSave + outputFilenameTB.Text;
             xmlFile.Save(outputFileName);
+
+            encryptPB.Show();
+            if (backgroundWorker1.IsBusy != true)
+            {
+                // Start the asynchronous operation.
+                backgroundWorker1.RunWorkerAsync();
+            }
 
             using (var swEncrypt = File.AppendText(outputFileName))
             {
@@ -222,6 +225,7 @@ namespace encryptionFilesAES
             this.encryptMessageLabel.ForeColor = Color.Green;
             this.encryptMessageLabel.Text = "Encryption suceeded";
         }
+
 
         private void Browse_Click(object sender, EventArgs e)
         {

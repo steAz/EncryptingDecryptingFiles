@@ -35,6 +35,7 @@ namespace encryptionFilesAES
             }
         }
 
+
         private bool AreDataWrong()
         {
             bool dataAreWrong = false;
@@ -43,7 +44,6 @@ namespace encryptionFilesAES
                 dataAreWrong = true;
                 errorMessageLabel.Text = "Fields are not filled";
             }
-
 
             if (!dataAreWrong)
             {
@@ -96,12 +96,6 @@ namespace encryptionFilesAES
             return dataAreWrong;
         }
 
-        private void CreateKeys()
-        {
-
-
-
-        }
 
         private void AddUser()
         {
@@ -127,6 +121,5 @@ namespace encryptionFilesAES
                 file.Write(IV);
             }
         }
-
     }
 }

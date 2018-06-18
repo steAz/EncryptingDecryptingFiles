@@ -45,11 +45,11 @@
             // authorsLabel
             // 
             this.authorsLabel.AutoSize = true;
-            this.authorsLabel.Location = new System.Drawing.Point(68, 81);
+            this.authorsLabel.Location = new System.Drawing.Point(150, 81);
             this.authorsLabel.Name = "authorsLabel";
             this.authorsLabel.Size = new System.Drawing.Size(193, 13);
             this.authorsLabel.TabIndex = 1;
-            this.authorsLabel.Text = "Michał Kazanowski, Oskar Kowalewski";
+            this.authorsLabel.Text = "Michał Kazanowski";
             // 
             // AboutForm
             // 
